@@ -1,5 +1,6 @@
 import json
 import socket
+import jsonFunctions as j
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('localhost', 65432))
@@ -22,19 +23,19 @@ def jsonRefresh():
 
 conn, addr = server.accept()
 jsonRefresh()
-json_data = json.dumps(toppingData)
-conn.sendall(json_data.encode())
+j.send_json(conn,toppingData)
+j.send_json(conn,pizzaData)
 
-data_buffer = b""
-while True:
-    chunk = conn.recv(1024)
-    if not chunk:
-        break
-    data_buffer += chunk
 
-toppingData = json.loads(data_buffer.decode())
 
+
+toppingData = j.receive_json(conn)
 with open("ToppingStock.json", "w") as file:
     json.dump(toppingData, file, indent=4)
+
+pizzaData = j.receive_json(conn)
+with open("CurrentPizzas.json", "w") as file:
+    json.dump(pizzaData, file, indent=4)
+
 
 conn.close()
