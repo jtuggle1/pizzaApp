@@ -10,6 +10,49 @@ client.connect(('localhost', 65432))
 toppingData = j.receive_json(client)
 pizzaData = j.receive_json(client)
 
+pc = int(pizzaData["PizzaCount"])
+
+#all functions related to pizza creation
+
+def lphelper(l):
+    s = ""
+    for i in l:
+        s = s + i
+    return s
+
+def listPizzas():
+    for i, j in pizzaData.items():
+        if i != "PizzaCount":
+            a = lphelper(j)
+            print(f"{i} has {a} as toppings \n")
+        else:
+            continue
+
+def pizzaToppingsList():
+    a = "d"
+    l = []
+    while(a != "q"):
+        a = input("Please enter toppings for pizza. Enter 'q' to stop adding toppings")
+        if a in toppingData and int(toppingData[a]) > 0:
+            toppingData[a] = str(int(toppingData[a]) - 1)
+            l.append(a)
+        elif a == 'q':
+            continue
+        else:
+            print("Topping is not available. Please choose another topping.")
+    return l
+
+def createPizza(l):
+    global pc
+    pc = pc + 1
+    n = "Pizza" + str(pc)
+    pizzaData[n] = l
+
+
+
+#testing functions
+l = pizzaToppingsList()
+createPizza(l)
 
 
 
@@ -56,7 +99,7 @@ while choice != "q":
 
 
 
-
+pizzaData["PizzaCount"] = pc
 
 j.send_json(client, toppingData)
 
