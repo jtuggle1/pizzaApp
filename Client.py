@@ -41,7 +41,10 @@ while connOpen:
         for i, j in pizzaData.items():
             if i != "PizzaCount":
                 a = lphelper(j)
-                print(f"{i} has {a} for toppings \n")
+                if a != "":
+                    print(f"{i} has {a} for toppings. \n")
+                else:
+                    print(f"{i} has no toppings. \n")
             else:
                 continue
 
@@ -63,9 +66,12 @@ while connOpen:
     #create pizza (will automatically be named based on pizza counter's current position)
     def createPizza(l):
         global pc
-        pc = pc + 1
-        n = "Pizza" + str(pc)
-        pizzaData[n] = l
+        if l not in pizzaData.values():
+            pc = pc + 1
+            n = "Pizza" + str(pc)
+            pizzaData[n] = l
+        else:
+            print("No duplicate pizzas!")
 
     #delete pizza
     def delPizza(p):
