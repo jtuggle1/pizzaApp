@@ -1,12 +1,20 @@
 import json
 import socket
 import jsonFunctions as j
+import sys
 
 while True:
     try:
         #server listening
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind(('localhost', 65432))
+
+        try:
+            host = sys.argv[1]
+            port = sys.argv[2]
+        except:
+            host = 'localhost'
+            port = 65432
+        server.bind((host, port))
         server.listen(1)
 
         #declaring global variables; these will both be based on the server's local JSON files

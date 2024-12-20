@@ -1,10 +1,18 @@
 import json
 import socket
 import jsonFunctions as j
+import sys
 
 #connect to server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('localhost', 65432))
+try:
+    host = sys.argv[1]
+    port = sys.argv[2]
+except:
+    host = 'localhost'
+    port = 65432
+
+client.connect((host, port))
 
 #get JSON data from server
 toppingData = j.receive_json(client)
@@ -15,7 +23,7 @@ pc = int(pizzaData["PizzaCount"])
 connOpen = True
 while connOpen:
 
-    role = input("Are you the store owner or the pizza chef? 'o' for owner, 'c' for chef, 'q' to close connection")
+    role = input("Are you the store owner or the pizza chef? 'o' for owner, 'c' for chef, 'q' to close connection: ")
 
     #all functions allocated to chef
 
@@ -33,7 +41,7 @@ while connOpen:
         for i, j in pizzaData.items():
             if i != "PizzaCount":
                 a = lphelper(j)
-                print(f"{i} has {a} as toppings \n")
+                print(f"{i} has {a} for toppings \n")
             else:
                 continue
 
@@ -42,7 +50,7 @@ while connOpen:
         a = "d"
         l = []
         while (a != "q"):
-            a = input("Please enter toppings for pizza. Enter 'q' to stop adding toppings")
+            a = input("Please enter toppings for pizza. Enter 'q' to stop adding toppings: ")
             if a in toppingData and int(toppingData[a]) > 0:
                 toppingData[a] = str(int(toppingData[a]) - 1)
                 l.append(a)
@@ -65,7 +73,7 @@ while connOpen:
 
     #adding toppings to existing pizza
     def updateAdd():
-        p = input("Which pizza would you like to add toppings to?")
+        p = input("Which pizza would you like to add toppings to? ")
         if p in pizzaData:
             l1 = pizzaData[p]
             l2 = pizzaToppingsList()
@@ -80,7 +88,7 @@ while connOpen:
 
     #removing toppings from existing pizza
     def updateRemove():
-        p = input("Which pizza would you like to remove toppings from?")
+        p = input("Which pizza would you like to remove toppings from? ")
         if p in pizzaData:
             c = "d"
             l = pizzaData[p]
@@ -130,10 +138,10 @@ while connOpen:
                     l = pizzaToppingsList()
                     createPizza(l)
                 case 'd':
-                    t = input("What pizza would you like to delete?")
+                    t = input("What pizza would you like to delete? ")
                     delPizza(t)
                 case 'u':
-                    k = input("Would you like to add or remove toppings from a pizza? choose 'a' or 'r'")
+                    k = input("Would you like to add or remove toppings from a pizza? choose 'a' or 'r': ")
                     if k == 'a':
                         updateAdd()
                     elif k == 'r':
@@ -151,15 +159,15 @@ while connOpen:
                 case 'l':
                     availableToppings()
                 case 'a':
-                    k = input("What topping would you like to add?")
-                    v = input("How many would you like to add?")
+                    k = input("What topping would you like to add? ")
+                    v = input("How many would you like to add? ")
                     addToppings(k, v)
                 case 'd':
-                    t = input("What topping would you like to delete?")
+                    t = input("What topping would you like to delete? ")
                     deleteTopping(t)
                 case 'u':
-                    k = input("What topping would you like to update?")
-                    v = input("How many would you like to add?")
+                    k = input("What topping would you like to update? ")
+                    v = input("How many would you like to add? ")
                     addToppings(k, v)
 
     #quitting session
