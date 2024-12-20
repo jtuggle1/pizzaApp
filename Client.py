@@ -23,7 +23,7 @@ pc = int(pizzaData["PizzaCount"])
 connOpen = True
 while connOpen:
 
-    role = input("Are you the store owner or the pizza chef? 'o' for owner, 'c' for chef, 'q' to close connection: ")
+    role = input("Are you the store owner or the pizza chef? 'o' for owner, 'c' for chef, 'q' to close connection: ").lower()
 
     #all functions allocated to chef
 
@@ -40,7 +40,7 @@ while connOpen:
     def listPizzas():
         for i, j in pizzaData.items():
             if i != "PizzaCount":
-                a = lphelper(j)
+                a = lphelper(j).lower()
                 if a != "":
                     print(f"{i} has {a} for toppings. \n")
                 else:
@@ -53,8 +53,8 @@ while connOpen:
         a = "d"
         l = []
         while (a != "q"):
-            a = input("Please enter toppings for pizza. Enter 'q' to stop adding toppings: ")
-            if a in toppingData and int(toppingData[a]) > 0:
+            a = input("Please enter toppings for pizza. Enter 'q' to stop adding toppings: ").lower()
+            if a in toppingData and a not in l and int(toppingData[a]) > 0:
                 toppingData[a] = str(int(toppingData[a]) - 1)
                 l.append(a)
             elif a == 'q':
@@ -75,11 +75,14 @@ while connOpen:
 
     #delete pizza
     def delPizza(p):
-        del pizzaData[p]
+        try:
+            del pizzaData[p]
+        except:
+            print("Pizza already does not exist.")
 
     #adding toppings to existing pizza
     def updateAdd():
-        p = input("Which pizza would you like to add toppings to? ")
+        p = input("Which pizza would you like to add toppings to? ").lower()
         if p in pizzaData:
             l1 = pizzaData[p]
             l2 = pizzaToppingsList()
@@ -94,13 +97,13 @@ while connOpen:
 
     #removing toppings from existing pizza
     def updateRemove():
-        p = input("Which pizza would you like to remove toppings from? ")
+        p = input("Which pizza would you like to remove toppings from? ").lower()
         if p in pizzaData:
             c = "d"
             l = pizzaData[p]
             while c != "q":
                 print(f"The toppings on this pizza are {l}")
-                c = input("Which would you like to remove? enter 'q' to stop")
+                c = input("Which would you like to remove? enter 'q' to stop").lower()
                 if c in l:
                     l.remove(c)
                     toppingData[c] = str(int(toppingData[c]) + 1)
@@ -126,6 +129,10 @@ while connOpen:
             c = toppingData[k]
             toppingData[k] = str(int(c) + int(v))
 
+        if int(toppingData[k]) <= 0:
+            deleteTopping(k)
+
+
     #delete topping from stock
     def deleteTopping(t):
         del toppingData[t]
@@ -136,7 +143,7 @@ while connOpen:
 
         while choice != "q":
             choice = input("'l' for all existing pizzas, 'c' to create a pizza, 'd' to delete a pizza, 'u' to update a "
-                           "pizza, 'q' to quit: ")
+                           "pizza, 'q' to quit: ").lower()
             match choice:
                 case 'l':
                     listPizzas()
@@ -144,10 +151,10 @@ while connOpen:
                     l = pizzaToppingsList()
                     createPizza(l)
                 case 'd':
-                    t = input("What pizza would you like to delete? ")
+                    t = input("What pizza would you like to delete? ").lower()
                     delPizza(t)
                 case 'u':
-                    k = input("Would you like to add or remove toppings from a pizza? choose 'a' or 'r': ")
+                    k = input("Would you like to add or remove toppings from a pizza? choose 'a' or 'r': ").lower()
                     if k == 'a':
                         updateAdd()
                     elif k == 'r':
@@ -160,12 +167,12 @@ while connOpen:
         while choice != "q":
             choice = input(
                 "'l' for all available toppings, 'a' to add a topping, 'd' to delete a topping, 'u' to update a "
-                "topping, 'q' to quit")
+                "topping, 'q' to quit: ").lower()
             match choice:
                 case 'l':
                     availableToppings()
                 case 'a':
-                    k = input("What topping would you like to add? ")
+                    k = input("What topping would you like to add? ").lower()
                     v = input("How many would you like to add? ")
                     addToppings(k, v)
                 case 'd':
@@ -173,8 +180,11 @@ while connOpen:
                     deleteTopping(t)
                 case 'u':
                     k = input("What topping would you like to update? ")
-                    v = input("How many would you like to add? ")
-                    addToppings(k, v)
+                    if k in toppingData.keys():
+                        v = input("How many would you like to add or remove? Use negative number to remove: ")
+                        addToppings(k, v)
+                    else:
+                        print("That is not an existing topping; Please consider adding it! ")
 
     #quitting session
     elif role == 'q':
