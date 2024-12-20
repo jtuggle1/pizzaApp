@@ -17,7 +17,6 @@ while connOpen:
 
     role = input("Are you the store owner or the pizza chef? 'o' for owner, 'c' for chef, 'q' to close connection")
 
-
     #all functions allocated to chef
 
     #helper function for list pizzas.concatenates list into string
@@ -98,14 +97,12 @@ while connOpen:
         else:
             print("Please enter an existing pizza!")
 
-
     #all functions allocated to store owner
 
     #List out all available toppings
     def availableToppings():
         for i, j in toppingData.items():
             print(f"There are {j} {i} available")
-
 
     #add toppings to stock
     def addToppings(k, v):
