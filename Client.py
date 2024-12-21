@@ -174,7 +174,11 @@ while connOpen:
                 case 'a':
                     k = input("What topping would you like to add? ").lower()
                     v = input("How many would you like to add? ")
-                    addToppings(k, v)
+                    #add isdigit checks everywhere
+                    if v.isdigit():
+                        addToppings(k, v)
+                    else:
+                        print("Please enter a valid value.")
                 case 'd':
                     t = input("What topping would you like to delete? ")
                     deleteTopping(t)
@@ -182,7 +186,10 @@ while connOpen:
                     k = input("What topping would you like to update? ")
                     if k in toppingData.keys():
                         v = input("How many would you like to add or remove? Use negative number to remove: ")
-                        addToppings(k, v)
+                        if v.isdigit():
+                            addToppings(k, v)
+                        else:
+                            print("Please enter a valid value.")
                     else:
                         print("That is not an existing topping; Please consider adding it! ")
 
